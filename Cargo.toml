@@ -15,5 +15,6 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 rodio = { version = "0.22", default-features = false, features = ["playback", "symphonia-all"] }
 mpd = "0.1.0"
-clap = "4.6.1"
+clap = { version = "4.6.1", features = ["derive"] }
 anyhow = "1.0.102"
+indexmap = "2.14.0"
