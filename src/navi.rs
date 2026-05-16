@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 use serde::Deserialize;
 
-
-  #[derive(Debug, Deserialize)]
-  struct Root {
+#[derive(Debug, Deserialize)] struct Root {
       #[serde(rename = "subsonic-response")]
       subsonic_response: SubsonicResponse,
   }
@@ -70,21 +68,24 @@ use serde::Deserialize;
   }
 pub struct NaviData { /* may change later */
     data: HashMap<Album, String>
+}   
+
+
+pub async fn navi_obj() -> SubsonicResponse {
+    
+
+
 }
 
 
 
 impl Album {
+    
+    pub async fn new(str: &String) -> NaviData {
+        for i in &map {
 
-    pub fn new(str: &String) -> Album {
-        
-        
-    }
 
+
+        }
 
 }
-
-
-
-
-

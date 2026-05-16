@@ -1,5 +1,9 @@
-
+use clap::Parser;
+use std::collections::HashMap;
+use reqwest::Client;
 mod navi;
+
+
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
