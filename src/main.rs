@@ -20,7 +20,7 @@ struct Args {
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("starting mpd server....");
-    println!("this is a test CLI so I can get Navidrome working");
+    println!("this is a test CLI so I can get Navidrome working properly btw");
     let args: Args = Args::parse();
     
     Ok(())
