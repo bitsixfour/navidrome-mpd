@@ -1,9 +1,8 @@
 use clap::Parser;
-use std::collections::HashMap;
 use reqwest::Client;
 
 mod navi;
-use navi::navi_obj;
+use crate::navi::SubsonicResponse;
 
 
 #[derive(Parser, Debug)]
@@ -28,16 +27,10 @@ async fn main() -> anyhow::Result<()> {
     println!("starting mpd server....");
     println!("this is a test CLI so I can get Navidrome working properly btw");
 
-
-    let client = reqwest::Client::new();
-    let res: SubsonicResponse = client
-        .get("https://clawd.rip");
-        .send()
-        .await.ok()?
-        .error_for_status().ok()?
-        .json::<SubsonicResponse>().await.ok?;
-
-    let args: Args = Args::parse();
+    let client: Client = reqwest::Client::new();
+    let _res: SubsonicResponse = navi::navi_obj(&client).await?;
+    
+    let _args: Args = Args::parse();
     
     Ok(())
 }

@@ -2,13 +2,14 @@ use std::collections::HashMap;
 use serde::Deserialize;
 use reqwest::Client;
 
-#[derive(Debug, Deserialize)] struct Root {
+#[derive(Debug, Deserialize)]
+struct Root {
     #[serde(rename = "subsonic-response")]
     subsonic_response: SubsonicResponse,
 }
 
 #[derive(Debug, Deserialize)]
-struct SubsonicResponse {
+pub struct SubsonicResponse {
     status: String,
     version: String,
     #[serde(rename = "type")]
@@ -21,12 +22,12 @@ struct SubsonicResponse {
     album_list_2: AlbumList2,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
 struct AlbumList2 {
     album: Vec<Album>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
 struct Album {
     id: String,
     name: String,
@@ -63,25 +64,46 @@ struct Album {
     sort_name: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
 struct Genre {
     name: String,
 }
-pub struct NaviData { /* may change later */
-    data: HashMap<Album, String>
-}   
-pub async fn navi_obj(client: &Client) -> SubsonicResponse {
 
-}   
+pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Error> {
+    let root = client
+        .get("http://127.0.0.1:8097/rest/getAlbumList2.view")
+        .query(&[
+            ("f", "json"),
+            ("type", "alphabeticalByName"),
+            ("size", "500"),
+            ("offset", "0"),
+        ])
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<Root>()
+        .await?;
 
-impl Album {
-    pub async fn new(str: &String) -> NaviData {
-            /* to be added later */
-            NaviData (
+    Ok(root.subsonic_response)
+}
 
 
-            )
+pub struct NaviData {
+    data: HashMap<Album, String>,
+}
+impl NaviData {
+
+    pub async fn new(client: &Client) -> NaviData {
+        let hmap: HashMap<Album, String> = HashMap::new();
+        let resp: SubsonicResponse = navi_obj(client).await.unwrap();
+        let size: Vec<Album> = resp.album_list_2.album;
+        
+        for i in &size {
+            for int
 
         }
-
+        Ok(Self {
+            data: hmap,
+        })
+    }
 }
