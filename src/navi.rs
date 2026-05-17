@@ -2,6 +2,9 @@ use std::collections::HashMap;
 use serde::Deserialize;
 use reqwest::Client;
 
+const URL: &str = "http://192.168.1.20:8097";
+const USR: &str = "nix";
+
 #[derive(Debug, Deserialize)]
 struct Root {
     #[serde(rename = "subsonic-response")]
@@ -111,7 +114,13 @@ impl NaviData<'a> {
 
 
 
-    pub async fn get_url(song_id: &str) -> String {
-a       
+    pub fn get_url(song_id: &str) -> String {
+      let x: String = format!("http://{}/rest/stream?id={}&u={}&p={}v=1.8.0&c=myapp", 
+             
+          
+    
+
+          );
+      x
     }
 }
