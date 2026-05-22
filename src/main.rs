@@ -17,10 +17,9 @@ pub struct Args {
     count: u8,
 }
 
-pub trait Album {
-    pub fn sigma(var: &str) -> String;
+pub trait AlbumData {
+    fn sigma(var: &str) -> String;
 }
-
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("starting mpd server....");

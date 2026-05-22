@@ -5,13 +5,13 @@ use reqwest::Client;
 const URL: &str = "http://192.168.1.20:8097";
 const USR: &str = "nix";
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct Root {
     #[serde(rename = "subsonic-response")]
     subsonic_response: SubsonicResponse,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct SubsonicResponse {
     status: String,
     version: String,
@@ -25,12 +25,12 @@ pub struct SubsonicResponse {
     album_list_2: AlbumList2,
 }
 
-#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Hash, Clone,  PartialEq)]
 pub struct AlbumList2 {
     album: Vec<Album>,
 }
 
-#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
+#[derive(Debug, Clone, Deserialize, Eq, Hash, PartialEq)]
 pub struct Album {
     pub id: String,
     pub name: String,
@@ -67,7 +67,7 @@ pub struct Album {
     sort_name: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Hash, PartialEq, Clone)]
 pub struct Genre {
     name: String,
 }
@@ -102,12 +102,10 @@ impl NaviData {
     pub async fn new(resp: SubsonicResponse) -> Self {
         let mut hmap: HashMap<String, Album> = HashMap::new();
         println!("Mapping Navidrome...");
-        let album: Vec<&Album> = resp.album_list_2.album;
-        
+        let album: Vec<Album> = resp.album_list_2.album;
         for i in &album {
             let name = i.name.clone();
-            hmap.insert(name, i);
- 
+            hmap.insert(name, i.clone()); 
         }
         Self {
             data: hmap,
