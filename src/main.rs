@@ -4,7 +4,7 @@ use reqwest::Client;
 mod navi;
 use crate::navi::{NaviData, SubsonicResponse};
 
-mod album;
+mod mpd;
 
 
 #[derive(Parser, Debug)]
@@ -17,9 +17,24 @@ pub struct Args {
     count: u8,
 }
 
-pub trait AlbumData {
-    fn sigma(var: &str) -> String;
+pub struct MpdSong {
+    id: String,
+    title: String,
+    artist: String,
+    album: String,
+    duration: f32,
 }
+/* Trait for actual Mpd and
+ * the Navidrome api */
+pub trait AlbumData {
+    fn get_id(var: &str) -> String;
+    fn get_dur(var: &str) -> String;
+}
+
+
+
+
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     println!("starting mpd server....");
