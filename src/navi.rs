@@ -6,7 +6,7 @@ const URL: &str = "http://192.168.1.20:8097";
 const USR: &str = "nix";
 
 #[derive(Debug, Deserialize)]
-struct Root {
+pub struct Root {
     #[serde(rename = "subsonic-response")]
     subsonic_response: SubsonicResponse,
 }
@@ -26,28 +26,28 @@ pub struct SubsonicResponse {
 }
 
 #[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
-struct AlbumList2 {
+pub struct AlbumList2 {
     album: Vec<Album>,
 }
 
 #[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
-struct Album {
-    id: String,
-    name: String,
-    artist: String,
+pub struct Album {
+    pub id: String,
+    pub name: String,
+    pub artist: String,
 
     #[serde(rename = "artistId")]
-    artist_id: String,
+    pub artist_id: String,
 
     #[serde(rename = "coverArt")]
-    cover_art: String,
+    pub cover_art: String,
 
     #[serde(rename = "songCount")]
-    song_count: u32,
+    pub song_count: u32,
 
-    duration: u32,
+    pub duration: u32,
 
-    created: String,
+    pub created: String,
 
     year: Option<u32>,
     genre: Option<String>,
@@ -68,7 +68,7 @@ struct Album {
 }
 
 #[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
-struct Genre {
+pub struct Genre {
     name: String,
 }
 
@@ -89,38 +89,27 @@ pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Erro
 
     Ok(root.subsonic_response)
 }
-
-
-pub struct NaviData<'a> {
-    pub data: HashMap<&'a str, &'a Album>
+pub struct NaviData {
+    pub data: HashMap<String, Album>,
 }
-impl NaviData<'a> {
 
-    pub async fn new(client: &Client) -> NaviData {
-        let mut hmap: HashMap<Album, String> = HashMap::new();
-        let resp: SubsonicResponse = navi_obj(client).await.expect("Could not access Navidrome. Check the URL and Navidrome itself");
+impl NaviData {
+    pub async fn new(resp: SubsonicResponse) -> NaviData {
+        let mut hmap: HashMap<String, Album> = HashMap::new();
+        println!("Mapping Navidrome...");
         let album: Vec<Album> = resp.album_list_2.album;
         
-        for i in &album {
+        for i in album {
             println!("adding to hashmap (dbg)");
-            let x: &str = i.name.as_str();
-            hmap.insert(i, x);
+            let name = i.name.clone();
+            hmap.insert(name, i);
  
         }
-        Ok(Self {
+        NaviData {
             data: hmap,
-        })
+        }
     }
-
-
-
     pub fn get_url(song_id: &str) -> String {
-      let x: String = format!("http://{}/rest/stream?id={}&u={}&p={}v=1.8.0&c=myapp", 
-             
-          
-    
-
-          );
-      x
+        format!("{URL}/rest/stream?id={song_id}&u={USR}&v=1.8.0&c=myapp")
     }
 }
