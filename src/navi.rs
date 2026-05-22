@@ -104,7 +104,9 @@ impl NaviData {
         println!("Mapping Navidrome...");
         let album: Vec<Album> = resp.album_list_2.album;
         for i in &album {
-            let name = i.name.clone();
+            let name = i.name
+                .clone()
+                .to_lowercase();
             println!("Yes saar. We are importing this to navidrome");
             hmap.insert(name, i.clone()); 
         }
