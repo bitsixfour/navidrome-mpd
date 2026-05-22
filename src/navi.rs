@@ -102,15 +102,16 @@ impl NaviData {
     pub async fn new(resp: SubsonicResponse) -> Self {
         let mut hmap: HashMap<String, Album> = HashMap::new();
         println!("Mapping Navidrome...");
-        let album: Vec<Album> = resp.album_list_2.album;
+        let album: Vec<&Album> = resp.album_list_2.album;
         
-        for i in album {
+        for i in &album {
             let name = i.name.clone();
             hmap.insert(name, i);
  
         }
         Self {
             data: hmap,
+            album_list: album,
         }
     }
 }

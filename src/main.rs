@@ -4,6 +4,8 @@ use reqwest::Client;
 mod navi;
 use crate::navi::{NaviData, SubsonicResponse};
 
+mod album;
+
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
@@ -15,6 +17,9 @@ pub struct Args {
     count: u8,
 }
 
+pub trait Album {
+    pub fn sigma(var: &str) -> String;
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
