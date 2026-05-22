@@ -71,10 +71,14 @@ pub struct Album {
 pub struct Genre {
     name: String,
 }
+pub fn get_url(song_id: &str) -> String {
+    format!("{}/rest/stream?id={}&u={USR}&v=1.8.0&c=myapp", 
+        URL, song_id)
+}
 
 pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Error> {
     let root = client
-        .get("http://127.0.0.1:8097/rest/getAlbumList2.view")
+        .get("http://192.168.1.20:8097/rest/getAlbumList2?u=nix&p=2008&v=1.16.1&c=test&f=json&type=alphabeticalByName&size=500")
         .query(&[
             ("f", "json"),
             ("type", "alphabeticalByName"),
@@ -91,25 +95,22 @@ pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Erro
 }
 pub struct NaviData {
     pub data: HashMap<String, Album>,
+    pub album_list: Vec<Album>,
 }
 
 impl NaviData {
-    pub async fn new(resp: SubsonicResponse) -> NaviData {
+    pub async fn new(resp: SubsonicResponse) -> Self {
         let mut hmap: HashMap<String, Album> = HashMap::new();
         println!("Mapping Navidrome...");
         let album: Vec<Album> = resp.album_list_2.album;
         
         for i in album {
-            println!("adding to hashmap (dbg)");
             let name = i.name.clone();
             hmap.insert(name, i);
  
         }
-        NaviData {
+        Self {
             data: hmap,
         }
-    }
-    pub fn get_url(song_id: &str) -> String {
-        format!("{URL}/rest/stream?id={song_id}&u={USR}&v=1.8.0&c=myapp")
     }
 }

@@ -22,15 +22,13 @@ async fn main() -> anyhow::Result<()> {
     println!("this is a test CLI so I can get Navidrome working properly btw");
 
     let client: Client = reqwest::Client::new();
-    let args: Args = Args::parse();
 
     let res: SubsonicResponse = navi::navi_obj(&client).await?;
     let navi: NaviData = NaviData::new(res).await;
 
-    let mat = &navi.data.get(&args.album);
-    match mat {
-        Some(value) => println!("the full metadata for that album is {:?}", mat),
-        None => println!("not found"),
-    }
+//   match mat {
+//      Some(value) => println!("the full metadata for that album is {:?}", mat),
+//        None => println!("not found"),
+//    }
     Ok(())
 }
