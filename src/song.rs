@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 
-pub struct Song {
-
+pub struct FullAlbum {
+    full_album: Vec<MpdAlbum>,
 }
 
 
@@ -16,19 +16,13 @@ pub struct MpdAlbum {
 }
 
 
-impl Album {
+impl FullAlbum {
     pub fn get(io: &str, resp: &NaviData ) -> Self {
         println!("finding data");   
         let data: Album = navidata.get(io).unwrap();
-        
-
+        let a_resp: Vec<MpdAlbum> = Vec::new();
         (Self {
-            file: data.id,
-            title: data.name,
-            artist: data.artist,
-            album: data.name;
-            duration:
-            track:
+            
         })
     }
     fn to_text(&Self) -> &str {
