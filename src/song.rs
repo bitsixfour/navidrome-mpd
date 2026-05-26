@@ -17,20 +17,13 @@ pub struct MpdAlbum {
 
 
 impl FullAlbum {
-    pub fn get(io: &str, resp: &NaviData ) -> Self {
-        println!("finding data");   
-        let data = resp.get(io).unwrap();
-        let a_resp: Vec<MpdAlbum> = Vec::new();
-        Self {
-            full_album: a_resp
-        }
-
-    }
-    async fn to_obj(&self) -> Vec<MpdAlbum> {
+    async fn new(alb: &NaviData, ser: &str) -> Vec<MpdAlbum> {
         let vec: Vec<MpdAlbum> = Vec::new();
         println!("currentsong");
+        let url = format!("http://192.168.1.20:8097/rest/getAlbum?id={}&u=nix&v=1.8.0&c=myapp", alb.data.get(ser);
+
         let root = client
-            .get("http://192.168.1.20:8097/rest/getAlbumList2?u=nix&p=2008&v=1.16.1&c=test&f=json&type=alphabeticalByName&size=500")
+            .get(url)
             .query(&[
                 ("f", "json"),
                 ("type", "alphabeticalByName"),
