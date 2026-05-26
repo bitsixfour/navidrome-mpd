@@ -19,15 +19,31 @@ pub struct MpdAlbum {
 impl FullAlbum {
     pub fn get(io: &str, resp: &NaviData ) -> Self {
         println!("finding data");   
-        let data: Album = navidata.get(io).unwrap();
+        let data: = resp.get(io).unwrap();
         let a_resp: Vec<MpdAlbum> = Vec::new();
         (Self {
-            
+            full_album: Vec<
         })
     }
-    fn to_text(&Self) -> &str {
+    fn to_text(&self) -> &str {
 
-        "currentsong"
+        println!("currentsong");
+        
+        let mut str: &str = 
+            "file: {} \n
+             Last-modified: {} \n
+             Format: {} \n
+             Artist: {} \n
+             AlbumArtist: {} \n
+             Title: {} \n
+             Album: {} \n
+             Track: {} \n
+             Time: {} \n
+             duration: {} \n
+             OK";
+        str
+        
+        
     }
 
 

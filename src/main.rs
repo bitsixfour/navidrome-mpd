@@ -1,12 +1,13 @@
 use clap::Parser;
 use reqwest::Client;
 use event_listener::{Event, Listener};
-
 use tokio::net::TcpListener;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 
 mod navi;
 mod song;
+mod mpd;
+use mpd::getSong;
 use crate::navi::{NaviData, SubsonicResponse};
 
 
