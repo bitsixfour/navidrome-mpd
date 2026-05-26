@@ -40,7 +40,7 @@ pub trait AlbumData {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("starting mpd server....");
+    println!("starting ze mpd server....");
 
     let client: Client = reqwest::Client::new();
 
