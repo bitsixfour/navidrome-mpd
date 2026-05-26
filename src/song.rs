@@ -20,8 +20,7 @@ impl FullAlbum {
     async fn new(alb: &NaviData, ser: &str) -> Vec<MpdAlbum> {
         let vec: Vec<MpdAlbum> = Vec::new();
         println!("currentsong");
-        let url = format!("http://192.168.1.20:8097/rest/getAlbum?id={}&u=nix&v=1.8.0&c=myapp", alb.data.get(ser);
-
+        let url = format!("http://192.168.1.20:8097/rest/getAlbum?id={}&u=nix&v=1.8.0&c=myapp", uid);
         let root = client
             .get(url)
             .query(&[
@@ -36,7 +35,7 @@ impl FullAlbum {
             .json::<Root>()
         .await?;
 
-        vec
+        return vec
         
     }
 
