@@ -101,7 +101,7 @@ pub struct NaviData {
 impl NaviData {
     pub async fn new(resp: SubsonicResponse) -> Self {
         let mut hmap: HashMap<String, Album> = HashMap::new();
-        println!("Mapping Navidrome...");
+        println!("new struct");
         let album: Vec<Album> = resp.album_list_2.album;
         for i in &album {
             let name = i.name

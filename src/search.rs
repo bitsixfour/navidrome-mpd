@@ -108,19 +108,14 @@ pub struct Song {
     pub sort_name: String,
     #[serde(rename = "mediaType")]
     pub media_type_tag: String,
-    #[serde(rename = "replayGain")]
-    pub replay_gain: ReplayGain,
     #[serde(rename = "channelCount")]
     pub channel_count: u32,
     #[serde(rename = "samplingRate")]
     pub sampling_rate: u32,
     #[serde(rename = "bitDepth")]
     pub bit_depth: u32,
-    pub artists: Vec<ArtistRef>,
     #[serde(rename = "displayArtist")]
     pub display_artist: String,
-    #[serde(rename = "albumArtists")]
-    pub album_artists: Vec<ArtistRef>,
     #[serde(rename = "displayAlbumArtist")]
     pub display_album_artist: String,
 }
@@ -135,6 +130,8 @@ pub struct MpdAlbum<'a> {
     track: i16,
 }
 
+
+/* Actually get MPD Tracklist data from album-id */
 impl SubsIDResponse {
     async fn new(client: &Client, alb: &NaviData, ser: &str) -> SubsIDResponse{
         println!("currentsong");
@@ -157,7 +154,7 @@ impl SubsIDResponse {
 
         
     }
-    fn return_mpd_searchup(&self) -> Vec<&str> {
+    fn print_tracklist(&self) -> Vec<&str> {
         let mut vec: Vec<&str> = Vec::new();
         let album_list: Vec<Song> = self
             .subsonic_response
@@ -165,16 +162,22 @@ impl SubsIDResponse {
             .song.clone();
         println!("array of song found (dbg");
         for track in album_list {
-            let mpdretrn: &str = format!("
-                file: {} \n
+            let mpdretrn = 
+                "file: {} \n
+                Last-Modified: {} \n
+                Time: {} \n
+                duration: {} \n
+                Artist: {} \n
+                AlbumArtist: {} \n
                 Title: {} \n
-                Artist {} \n
-                A
-                ");
+                Track: {} \n
+                Date: {} \n
+                Genre: {} \n
+                ";
+            vec.push(mpdretrn);
+
 
         }
-
-
         vec
 
     }
