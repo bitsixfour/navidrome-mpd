@@ -7,12 +7,13 @@ pub enum Expr {
 }
 
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 enum Token {
     LParen,
     RParen,
     And,
     Or,
+    Not,
     Field(String),
     Op(String),
     Value(String),
@@ -43,6 +44,8 @@ fn tokenize(input: &str) -> Vec<Token> {
                 if chars.peek() == Some(&'=') {
                     chars.next();
                     tokens.push(Token::Op("==".to_string()));
+                } else {
+                    tokens.push(Token::Op("=".to_string()));
                 }
             }
             '!' => {
@@ -65,10 +68,23 @@ fn tokenize(input: &str) -> Vec<Token> {
                 let token = match word.as_str() {
                     "AND"      => Token::And,
                     "OR"       => Token::Or,
+                    "NOT"      => Token::Not,
                     "contains" => Token::Op("contains".to_string()),
                     _          => Token::Field(word),
                 };
                 tokens.push(token);
+            }
+            '0'..='9' => {
+                let mut num = String::new();
+                while let Some(&ch) = chars.peek() {
+                    if ch.is_ascii_digit() {
+                        num.push(ch);
+                        chars.next();
+                    } else {
+                        break;
+                    }
+                }
+                tokens.push(Token::Value(num));
             }
             _ => { chars.next(); }
         }
@@ -113,7 +129,13 @@ impl Parser {
     fn parse_expr(&mut self) -> Result<Expr, String> {
         self.expect(&Token::LParen)?;
 
-        // compound: ((a) AND/OR (b))
+        if self.peek() == Some(&Token::Not) {
+            self.consume();
+            let inner = self.parse_expr()?;
+            self.expect(&Token::RParen)?;
+            return Ok(Expr::Not(Box::new(inner)));
+        }
+
         if self.peek() == Some(&Token::LParen) {
             let left = self.parse_expr()?;
 
@@ -129,7 +151,6 @@ impl Parser {
             };
         }
 
-        // condition: (field op "value")
         let field = match self.consume() {
             Some(Token::Field(f)) => f,
             other => return Err(format!("Expected field, got {:?}", other)),
