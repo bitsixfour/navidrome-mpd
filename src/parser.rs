@@ -5,10 +5,9 @@ pub enum Expr {
     Field(Field),
     Empty,
 }
-#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Field {
     pub field: String,
-    pub op: String,
+    pub op: bool,
     pub value: String
 }
 
@@ -23,8 +22,18 @@ enum Token {
     Value(String),
 }
 
+struct Parser {
+    tokens: Vec<Token>,
+    size: i32,
+}
 
-mod parser {
+
+mod parse_exp {
+    fn new(needed_data: &str) -> Vec<Token> {
+        let vec: Vec<Token> = tokenize_and_filter(needed_data);
+        vec
+    }
+
     fn tokenize_and_filter(input: &str) -> Vec<Token> {
         let mut tokens = Vec::new();
         let mut chars = input.chars().peekable();
@@ -90,52 +99,76 @@ mod parser {
                     tokens.push(Token::Value(num));
                 }
                 _ => { chars.next(); } 
+                /* ex: ARTIST EQUALS VALUE OR ALBUM EQUALS WHATEVER */
             }
         }
-
         tokens
     }
+}
+enum Check {
+    And,
+    Or,
+    None,
+}
+
+impl Expr {
+    fn create_eval(tkn: Vec<Token>) -> Expr { 
+        let mut xenu = Check::None;
+        let mut special: bool = false;
+        for i in &tkn { // i need to make this better
+            match i {
+               Token::And => {
+                   let arg_1 = create_arg_struct(tkn, 0);
+                   let arg_2 = create_arg_struct(tkn, 3);
+                   match tkn.get(3) {
+                        Token::
+
+                   }
 
 
-    fn parse(&self) -> Vec<Token> {
-        let mut fields: Vec<Field> = Vec::new();
-        let mut ops: Vec<Token> = Vec::new();
-        let mut i = 0;
 
-        while i + 2 < self.tokens.len() {
-            match &self.tokens[i] {
-                Token::Field(f) => {
-                    let op = match &self.tokens[i + 1] {
-                        Token::Eq => "==",
-                        Token::NotEq => "!=",
-                        _ => return Expr::Empty,
-                    };
-                    if let Token::Value(v) = &self.tokens[i + 2] {
-                        fields.push(Field { field: f.clone(), op: op.into(), value: v.clone() });
-                    }
-                    i += 3;
                 }
-                Token::And | Token::Or => {
-                    ops.push(self.tokens[i].clone());
-                    i += 1;
+                Token::Or => {
+                   let arg_1 = create_arg_struct(tkn, 0);
+                   let arg_2 = create_arg_struct(tkn, 3);
+
+
                 }
-                _ => return Expr::Empty,
+                _ => println!("IDK")
             }
         }
+        if special == false {
+            let arg = create_arg_struct(tkn, 0);
+        }
+        
+        
 
-        match fields.len() {
-            0 => Expr::Empty,
-            1 => Expr::Field(fields.remove(0)),
-            _ => {
-                let b = fields.remove(1);
-                let a = fields.remove(0);
-                match ops.remove(0) {
-                    Token::And => Expr::And(a, b),
-                    _ => Expr::Or(a, b),
-                }
-            }
+        Expr {
+
         }
     }
+
 }
 
 
+pub fn create_arg_struct(tkn: Vec<Token>, k: i32) -> Field {
+    let arg = Field {
+        field: match tkn.get(k+1) {
+            Some(Token::Field(s)) => s.clone(),
+            _ => panic!("expected Field token"),
+        },
+        op: match tkn.get(k+2) {
+            Some(Token::And) => true,
+            Some(Token::Or) => false,
+            _ => panic!("expected And/Or token"),
+        },
+        value: match tkn.get(k+3) {
+            Some(Token::Value(s)) => s.clone(),
+            _ => panic!("expected Value token"),
+        },
+    };
+    arg
+
+    
+
+}
