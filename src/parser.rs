@@ -1,9 +1,13 @@
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Expr {
-    And(Box<Expr>, Box<Expr>),
-    Or(Box<Expr>, Box<Expr>),
-    Not(Box<Expr>),
-    Field { field: String, op: String, value: String },
+    And(Expr, Expr),
+    Or(Expr, Expr),
+    Not(Expr),
+}
+pub struct Field {
+    pub field: String,
+    pub op: String,
+    pub value: String
 }
 
 
@@ -17,6 +21,7 @@ enum Token {
     Field(String),
     Op(String),
     Value(String),
+    Empty,
 }
 fn tokenize(input: &str) -> Vec<Token> {
     let mut tokens = Vec::new();
@@ -171,3 +176,23 @@ impl Parser {
         Ok(Expr::Field { field, op, value })
     }
 }
+
+
+
+impl Expr {
+
+    fn create_eval(&self, song: &Song) -> Self {
+        match self {
+            Expr::And(a, b) =>
+            Expr::Or(a, b) =>
+            Expr::Not(a) =>
+
+
+
+        }
+
+    }
+
+}
+
+
