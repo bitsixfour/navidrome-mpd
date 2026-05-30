@@ -2,9 +2,10 @@
 pub enum Expr {
     And(Field, Field),
     Or(Field, Field),
-    Field(Field),
+    Def(Field),
     Empty,
 }
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Field {
     pub field: String,
     pub op: bool,
@@ -112,46 +113,40 @@ enum Check {
 }
 
 impl Expr {
-    fn create_eval(tkn: Vec<Token>) -> Expr { 
-        let mut xenu = Check::None;
+    fn create_eval(tkn: Vec<Token>) -> Option<Expr> { 
+      //  let mut xenu = Check::None;
         let mut special: bool = false;
-        for i in &tkn { // i need to make this better
+        for i in &tkn { // TODO: OPTIMIZE THIS LATER 
             match i {
                Token::And => {
-                   let arg_1 = create_arg_struct(tkn, 0);
+                   let arg_1 = create_arg_struct(tkn.clone(), 0);
                    let arg_2 = create_arg_struct(tkn, 3);
-                   match tkn.get(3) {
-                        Token::
-
-                   }
-
+                   special = true;
+                   return Some(Expr::And(arg_1,arg_2))
 
 
                 }
                 Token::Or => {
                    let arg_1 = create_arg_struct(tkn, 0);
-                   let arg_2 = create_arg_struct(tkn, 3);
-
-
+                   let arg_2 = create_arg_struct(tkn.clone(), 3);
+                   special = true;
+                   return Some(Expr::Or(arg_1, arg_2))
                 }
                 _ => println!("IDK")
             }
         }
         if special == false {
             let arg = create_arg_struct(tkn, 0);
+            return Some(Expr::Def(arg))
         }
-        
-        
 
-        Expr {
-
-        }
+        None
     }
 
 }
 
 
-pub fn create_arg_struct(tkn: Vec<Token>, k: i32) -> Field {
+pub fn create_arg_struct(tkn: Vec<Token>, k: usize) -> Field {
     let arg = Field {
         field: match tkn.get(k+1) {
             Some(Token::Field(s)) => s.clone(),
