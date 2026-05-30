@@ -72,8 +72,7 @@ pub struct Genre {
     name: String,
 }
 pub fn get_url(song_id: &str) -> String {
-    format!("{}/rest/stream?id={}&u={USR}&v=1.8.0&c=myapp", 
-        URL, song_id)
+    format!("{}/rest/stream?id={}&u={USR}&v=1.8.0&c=myapp", URL, song_id)
 }
 
 pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Error> {
@@ -93,6 +92,18 @@ pub async fn navi_obj(client: &Client) -> Result<SubsonicResponse, reqwest::Erro
 
     Ok(root.subsonic_response)
 }
+
+
+
+pub enum Metadata {
+    Album(String),
+    Artist(String),
+    Year(String),
+    /* ain't doing allat
+    Genres(Vec<String>),
+    */
+}
+
 pub struct NaviData {
     pub data: HashMap<String, Album>, /* test CLI utils */
     pub album_list: Vec<Album>,
